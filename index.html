@@ -1,51 +1,98 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style type="text/css">
-  
-	.node {
-    cursor: pointer;
-  }
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/spectrum.css" rel="stylesheet">
+<link href="collapsible.css" rel="stylesheet">
+<link href="css/jquery-ui.min.css" rel="stylesheet">
+<link href="css/jquery-ui.theme.min.css" rel="stylesheet">
+<link href="css/jquery-ui.structure.min.css" rel="stylesheet">
+<link href="css/jquery.contextMenu.css" rel="stylesheet">
 
-  .overlay{
-      background-color:#EEE;
-  }
-   
-  .node circle {
-    fill: #fff;
-    stroke: steelblue;
-    stroke-width: 1.5px;
-  }
-   
-  .node text {
-    font-size:10px; 
-    font-family:sans-serif;
-  }
-   
-  .link {
-    fill: none;
-    stroke: #ccc;
-    stroke-width: 1.5px;
-  }
+<link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&amp;subset=latin,cyrillic" rel="stylesheet" type="text/css">
 
-  .templink {
-    fill: none;
-    stroke: red;
-    stroke-width: 3px;
-  }
-
-  .ghostCircle.show{
-      display:block;
-  }
-
-  .ghostCircle, .activeDrag .ghostCircle{
-       display: none;
-  }
-
-</style>
-<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap3-typeahead.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/spectrum.js"></script>
+<script src="js/jquery.contextMenu.js"></script>
 <script src="tree.js"></script>
+<script src="collapsible.js"></script>
+
 <body>
-    <div id="tree-container"></div>
+
+    <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Collapsible References</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right">
+            <div class="form-group">
+              <input type="text" placeholder="Email" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Sign in</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+
+    <div class="container overlay-form">
+      <div class="form-overlay">
+        <form class="form-inline">
+          <div class="form-group">
+            <label for="itemName">Name</label>
+            <input type="text" class="form-control" id="itemName" placeholder="Item Name">
+          </div>
+          <div class="form-group">
+            <label for="itemCategory">Category</label>
+            <input type="text" class="form-control" id="itemCategory" data-provide="typehead">
+          </div>
+          <!--
+          <div class="form-group">
+            <label for="itemColor">Pick a color</label>
+            <input type="text" id="itemColor">
+          </div>
+          -->
+          <div class="form-group">
+            <label for="itemSize">Item size</label>
+            <select class="form-control" id="itemSize">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+            </select>
+          </div>
+        </form>  
+        <div class="form-group">
+          <label for="comment">Comment:</label>
+          <textarea class="form-control" id="itemComment" rows="2"></textarea>
+        </div>
+        <button id="submitBtn" type="submit" class="btn btn-default">Submit</button>
+        <button type="submit" class="btn btn-default" onclick="$('.overlay-form').addClass('hide')">Cancel</button>
+      </div>   
+    </div>
+
+    <div class="container">
+      <div id="tree-container"></div>
+    </div>
 </body>
 </html>

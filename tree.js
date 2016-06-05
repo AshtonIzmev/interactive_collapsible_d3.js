@@ -21,20 +21,29 @@ DISCLAIMED. IN NO EVENT SHALL MICHAEL BOSTOCK BE LIABLE FOR ANY DIRECT,
 INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABIlocalLITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 // Thank you Rob for your great work (@AshtonIzmev)
 
+
+
 // Get JSON data
 treeJSON = d3.json("data.json", function(error, treeData) {
+
+    function saveData() {
+        console.log(treeData);
+    };
 
     // Calculate total nodes, max label length
     var totalNodes = 0;
     var maxLabelLength = 0;
     // variables for drag/drop
     var selectedNode = null;
+    var copiedNode = null;
+    var hoverNode = null;
+    var selectedMode = null;
     var draggingNode = null;
     // panning variables
     var panSpeed = 200;
@@ -45,11 +54,10 @@ treeJSON = d3.json("data.json", function(error, treeData) {
     var root;
 
     // size of the diagram
-    var viewerWidth = $(document).width();
-    var viewerHeight = $(document).height();
+    var viewerWidth = $("#tree-container").width();
+    var viewerHeight = $(document).height()-70;
 
-    var tree = d3.layout.tree()
-        .size([viewerHeight, viewerWidth]);
+    var tree = d3.layout.tree();
 
     // define a d3 diagonal projection for use by the node paths later on.
     var diagonal = d3.svg.diagonal()
@@ -333,7 +341,7 @@ treeJSON = d3.json("data.json", function(error, treeData) {
         scale = zoomListener.scale();
         x = -source.y0;
         y = -source.x0;
-        x = x * scale + viewerWidth / 2;
+        x = x * scale + viewerWidth / 4 ; // keep root node slightly on the left when loading
         y = y * scale + viewerHeight / 2;
         d3.select('g').transition()
             .duration(duration)
@@ -355,13 +363,137 @@ treeJSON = d3.json("data.json", function(error, treeData) {
         return d;
     }
 
+    function deleteNode(d) {
+        var childs = d.parent.children;
+        for(i=0; i<childs.length; i++) {
+            if (childs[i].id === d.id) {
+                childs.splice(i, 1);
+                return;
+            }    
+        }
+    }
+
+    function addNewNodeAt(d) {
+        var newChild = {'parent': d, 
+            'name': $('#itemName').val(), 'size': parseInt($('#itemSize').val()),
+            'comment': $('#itemComment').val(),
+            'category': $('#itemCategory').val()};
+        if (d.children) {
+            d.children.push(newChild);    
+        } else {
+            d.children = [newChild];
+        }
+    }
+
+    function pasteNodeAt(d, cop) {
+        var newChild = {'parent': d, 
+            'name': cop.name, 'size': cop.size,
+            'comment': cop.comment,
+            'category': cop.category};
+        if (d.children) {
+            d.children.push(newChild);    
+        } else {
+            d.children = [newChild];
+        }
+        update(d);
+    }
+
     // Toggle children on click.
 
     function click(d) {
         if (d3.event.defaultPrevented) return; // click suppressed
-        d = toggleChildren(d);
+        if (d3.event.shiftKey && !d3.event.ctrlKey) {
+            editNode(d);
+        }
+        if (d3.event.ctrlKey && !d3.event.shiftKey) {
+            addNewNodeAt(d);
+        }
+        if (d3.event.shiftKey && d3.event.ctrlKey) {
+            deleteNode(d);
+        }
+        if (!d3.event.shiftKey && !d3.event.ctrlKey) {
+            d = toggleChildren(d);    
+        }
         update(d);
-        centerNode(d);
+        if (!d3.event.shiftKey && !d3.event.ctrlKey) {
+            centerNode(d); 
+        }
+    }
+
+    function fillEditForm(d) {
+        $('#itemCategory').val(d.category);
+        $('#itemSize').val(d.size);
+        $('#itemName').val(d.name);
+        $('#itemComment').val(d.comment);
+    }
+
+    function editNode(d) {
+        $('.overlay-form').removeClass('hide');
+        fillEditForm(d);
+        selectedMode = "editing";
+    }
+
+    $(function() {
+        $.contextMenu({
+            selector: '.context-menu-one', 
+            callback: function(key, options) {
+                if (key === "edit") {
+                    editNode(hoverNode);
+                }
+                if (key === "cut") {
+                    copiedNode = hoverNode;
+                    deleteNode(hoverNode);
+                    update(hoverNode);
+                }
+                if (key === "copy") {
+                    copiedNode = hoverNode;
+                }
+                if (copiedNode && (key === "paste")) {
+                    pasteNodeAt(hoverNode, copiedNode);
+                }
+                if (key === "delete") {
+                    deleteNode(hoverNode);
+                    update(hoverNode);
+                }
+            },
+            items: {
+                "sep1": "---------",
+                "edit": {name: "Edit", icon: "edit"},
+                "cut": {name: "Cut", icon: "cut"},
+                "copy": {name: "Copy", icon: "copy"},
+                "paste": {name: "Paste", icon: "paste"},
+                "delete": {name: "Delete", icon: "delete"},
+                "sep2": "---------",
+                "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+            }
+        });   
+    });
+
+    $('#submitBtn').on('click', function() {
+        if (hoverNode && (selectedMode === "editing")) {
+            hoverNode.name = $('#itemName').val();
+            hoverNode.size = parseInt($('#itemSize').val());
+            hoverNode.comment = $('#itemComment').val();
+            hoverNode.category = $('#itemCategory').val();
+            $('.overlay-form').addClass('hide');
+        }
+        update(root);
+    });
+
+
+    function getItemLabel(d) {
+        if (d.name.length > 0 && d.category.length > 0) {
+            return d.category + " | " + d.name;
+        }
+        if (d.category.length > 0) {
+            return d.category;
+        }
+        if (d.name.length > 0) {
+            return d.name;
+        }
+        return "Unnamed";
     }
 
     function update(source) {
@@ -412,10 +544,15 @@ treeJSON = d3.json("data.json", function(error, treeData) {
             .on('click', click);
 
         nodeEnter.append("circle")
-            .attr('class', 'nodeCircle')
-            .attr("r", 0)
-            .style("fill", function(d) {
-                return d._children ? "lightsteelblue" : "#fff";
+            .attr('class', 'nodeCircle context-menu-one')
+            .attr("r", function(d) {
+                return (d.size ? d.size*2 : 5);
+            })
+            .style("stroke-width", function(d) {
+                return d._children ? "3px" : "1.3px";
+            })
+            .on("mouseover", function(d) {
+                hoverNode = d;
             });
 
         nodeEnter.append("text")
@@ -427,10 +564,10 @@ treeJSON = d3.json("data.json", function(error, treeData) {
             .attr("text-anchor", function(d) {
                 return d.children || d._children ? "end" : "start";
             })
-            .text(function(d) {
-                return d.name;
-            })
+            .text(getItemLabel)
             .style("fill-opacity", 0);
+
+        
 
         // phantom node to give us mouseover in a radius around it
         nodeEnter.append("circle")
@@ -454,15 +591,15 @@ treeJSON = d3.json("data.json", function(error, treeData) {
             .attr("text-anchor", function(d) {
                 return d.children || d._children ? "end" : "start";
             })
-            .text(function(d) {
-                return d.name;
-            });
+            .text(getItemLabel);
 
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle")
-            .attr("r", 4.5)
-            .style("fill", function(d) {
-                return d._children ? "lightsteelblue" : "#fff";
+            .style("stroke-width", function(d) {
+                return d._children ? "3px" : "1.3px";
+            })
+            .attr("r", function(d) {
+                return (d.size ? d.size*2 : 5);
             });
 
         // Transition nodes to their new position.
@@ -535,6 +672,8 @@ treeJSON = d3.json("data.json", function(error, treeData) {
             d.x0 = d.x;
             d.y0 = d.y;
         });
+
+        saveData();
     }
 
     // Append a group which holds all nodes and which the zoom Listener can act upon.
