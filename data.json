@@ -14,20 +14,24 @@
             }, {
                 "name": "CommunityStructure",
                 "size": 4,
-                "category": "informatique"
+                "category": "informatique",
+                "color": "#f4cccc"
             }, {
                 "name": "HierarchicalCluster",
                 "size": 3,
-                "category": "informatique"
+                "category": "informatique",
+                "color": "#f4cccc"
             }, {
                 "name": "MergeEdge",
                 "size": 2,
-                "category": "informatique"
+                "category": "informatique",
+                "color": "#f4cccc"
             }]
         }, {
             "name": "Visualization",
             "size": 3,
-            "category": "informatique"
+            "category": "informatique",
+            "color": "#f4cccc"
         }]
     }]
 }

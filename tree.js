@@ -482,6 +482,33 @@ treeJSON = d3.json("data.json", function(error, treeData) {
         update(root);
     });
 
+    $('#dlBtn').on('click', function() {
+        var obj = {a: 123, b: "4 5 6"};
+        var pom = document.createElement('a');
+        pom.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(stringify(root)));
+        pom.setAttribute('download', 'data.json');
+        pom.click();
+
+        return false;
+    });
+
+    function stringify(node) {
+        var a = '{"name": "'+node.name+'", "category": "'+node.category+'"';
+        if (node.children) {
+            a += ', "children": [';
+            var i =0;
+            for (i=0; i<node.children.length; i++) {
+                a += stringify(node.children[i]);
+                a +=', ';
+            }
+            a = a.slice(0, -2);
+            a += ']}';
+        } else {
+            a += '}';
+        }
+        return a;
+    }
+
 
     function getItemLabel(d) {
         if (d.name.length > 0 && d.category.length > 0) {
