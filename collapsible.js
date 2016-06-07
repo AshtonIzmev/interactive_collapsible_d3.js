@@ -1,9 +1,8 @@
 
 $( document ).ready(function() {
-	
-	$("#itemCategory").typeahead({ source:["item1","item2","item3"] });
-	$('.overlay-form').addClass('hide');
 
+	$("#itemCategory").typeahead({ source:["item1","item2","item3"] });
+	$('.main').hide();
 	$("#itemColor").spectrum({
 	    color: "#FFF",
 	    showInput: true,
