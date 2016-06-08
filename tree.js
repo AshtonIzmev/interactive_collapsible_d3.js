@@ -490,6 +490,7 @@ function init(data) {
                 $('.d3').show();
             }
             update(root);
+            return false;
         });
 
         $('#dlBtn').on('click', function() {
