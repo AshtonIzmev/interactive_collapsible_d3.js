@@ -28,9 +28,9 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 // Thank you Rob for your great work (@AshtonIzmev)
 
 
-function init(data) {
+function initD3Tree(data) {
     // Get JSON data
-    treeJSON = d3.json("data.json", function(error, treeData) {
+    treeJSON = d3.json("data/data.json", function(error, treeData) {
 
         if (data) {
             treeData = data;
@@ -401,7 +401,7 @@ function init(data) {
 
         // Toggle children on click.
 
-        function click(d) {
+        function rightClickNode(d) {
             if (d3.event.defaultPrevented) return; // click suppressed
             if (d3.event.shiftKey && !d3.event.ctrlKey) {
                 editNode(d);
@@ -432,7 +432,6 @@ function init(data) {
             nlf0.toggle.innerHTML = d.size ? d.size : nlf0.getinput.getAttribute('placeholder');
             nlf1.toggle.innerHTML = d.category.trim() !== '' ? d.category : nlf1.getinput.getAttribute('placeholder');
             nlf2.toggle.innerHTML = d.name.trim() !== '' ? d.name : nlf2.getinput.getAttribute('placeholder');
-            //$('#itemComment').val(d.comment);
         }
 
         function editNode(d) {
@@ -494,12 +493,10 @@ function init(data) {
         });
 
         $('#dlBtn').on('click', function() {
-            var obj = {a: 123, b: "4 5 6"};
             var pom = document.createElement('a');
             pom.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(stringify(root)));
             pom.setAttribute('download', 'data.json');
             pom.click();
-
             return false;
         });
 
@@ -578,7 +575,7 @@ function init(data) {
                 .attr("transform", function(d) {
                     return "translate(" + source.y0 + "," + source.x0 + ")";
                 })
-                .on('click', click);
+                .on('click', rightClickNode);
 
             nodeEnter.append("circle")
                 .attr('class', 'nodeCircle context-menu-one')
@@ -725,8 +722,9 @@ function init(data) {
     });
 }
 
-$( document ).ready(function() { 
-    init();
+$( document ).ready(function() {
+    $('.main').hide();  
+    initD3Tree();
     $('#ulBtn').on('click', function() {
         input = $('#fileInput');
         if (!input) {
@@ -743,7 +741,7 @@ $( document ).ready(function() {
           fr = new FileReader();
           fr.onload = function(e) {  
             bfile = e.target.result
-            init(JSON.parse(bfile));
+            initD3Tree(JSON.parse(bfile));
           }
           fr.readAsText(file);
         }

@@ -9,6 +9,7 @@
         "children": [{
             "name": "cluster",
             "category": "informatique",
+            "size": 3,
             "children": [{
                 "name": "AgglomerativeCluster",
                 "size": 8,

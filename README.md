@@ -9,3 +9,4 @@ Thanks to
 * https://bgrins.github.io/spectrum/
 * http://swisnl.github.io/jQuery-contextMenu/docs.html
 * http://getbootstrap.com/
+* https://github.com/codrops/NaturalLanguageForm
