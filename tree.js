@@ -437,6 +437,7 @@ function init(data) {
 
         function editNode(d) {
             $('.main').show();
+            $('.d3').hide()
             fillEditForm(d);
             selectedMode = "editing";
         }
@@ -486,6 +487,7 @@ function init(data) {
                 hoverNode.comment = $('#itemComment').val();
                 hoverNode.category = $('#itemCategory').val();
                 $('.main').hide();
+                $('.d3').show();
             }
             update(root);
         });
@@ -730,10 +732,10 @@ $( document ).ready(function() {
           alert("Um, couldn't find the fileinput element.");
         }
         else if (!input.get(0).files) {
-          alert("This browser doesn't seem to support the `files` property of file inputs.");
+          alert("This browser doesn't seem to support the `files` property of file inputs. Please use latest version of Chrome");
         }
         else if (!input.get(0).files[0]) {
-          alert("Please select a model before clicking 'Load'");               
+          alert("Please select a model before clicking 'Use upload model'");               
         }
         else {
           file = input.get(0).files[0];

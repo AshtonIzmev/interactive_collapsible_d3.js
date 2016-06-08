@@ -44,9 +44,9 @@
         <div id="navbar" class="navbar-collapse collapse">
           <form class="navbar-form navbar-right">
             <label class="btn btn-default btn-file">
-                Load a model <input type="file" id="fileInput" style="display: none;">
+                Upload a model <input type="file" id="fileInput" style="display: none;">
             </label>
-            <button id="ulBtn" class="btn btn-primary">Use loaded model</button>
+            <button id="ulBtn" class="btn btn-primary">Use uploaded model</button>
             <button id="dlBtn" class="btn btn-success">Download model</button>
           </form>
         </div><!--/.navbar-collapse -->
@@ -54,13 +54,13 @@
 
     <div class="main clearfix">
       <form id="nl-form" class="nl-form">
-        This node is <input type="text" id="itemSize" data-subline="For example: 2" placeholder="a size" value="">  
+        This node is <input type="text" id="itemSize" data-subline="For example: 2" placeholder="a number" value="">  
         points size with 
-          <input type="text" id="itemCategory" data-subline="For example: Books" placeholder="a category" value=""> category and 
-        <input type="text" id="itemName" placeholder="a name" data-subline="For example: Asimov" value=""> name
+          <input type="text" id="itemCategory" data-subline="For example: Books" placeholder="a category" value=""> as a category and 
+        <input type="text" id="itemName" placeholder="a name" data-subline="For example: Asimov" value=""> as a name
 
         <div class="nl-submit-wrap">
-          <button type="submit" class="nl-submit" onclick="$('.main').hide()">Cancel</button>
+          <button type="submit" class="nl-submit" onclick="$('.main').hide();$('.d3').show();">Cancel</button>
           <button type="submit" class="nl-submit" id="submitBtn">Submit</button>
         </div>
         <div class="nl-overlay"></div>

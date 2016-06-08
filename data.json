@@ -1,9 +1,11 @@
 {
     "name": "flare",
     "category": "informatique",
+    "size": 4,
     "children": [{
         "name": "analytics",
         "category": "informatique",
+        "size": 4,
         "children": [{
             "name": "cluster",
             "category": "informatique",
@@ -14,24 +16,20 @@
             }, {
                 "name": "CommunityStructure",
                 "size": 4,
-                "category": "informatique",
-                "color": "#f4cccc"
+                "category": "informatique"
             }, {
                 "name": "HierarchicalCluster",
                 "size": 3,
-                "category": "informatique",
-                "color": "#f4cccc"
+                "category": "informatique"
             }, {
                 "name": "MergeEdge",
                 "size": 2,
-                "category": "informatique",
-                "color": "#f4cccc"
+                "category": "informatique"
             }]
         }, {
             "name": "Visualization",
             "size": 3,
-            "category": "informatique",
-            "color": "#f4cccc"
+            "category": "informatique"
         }]
     }]
 }
