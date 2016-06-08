@@ -376,9 +376,9 @@ function initD3Tree(data) {
 
         function addNewNodeAt(d) {
             var newChild = {'parent': d, 
-                'name': $('#itemName').val(), 'size': parseInt($('#itemSize').val()),
-                'comment': $('#itemComment').val(),
-                'category': $('#itemCategory').val()};
+                'name': 'name', 'size': 3,
+                'comment': 'comment',
+                'category': 'category'};
             if (d.children) {
                 d.children.push(newChild);    
             } else {
@@ -481,10 +481,12 @@ function initD3Tree(data) {
 
         $('#submitBtn').on('click', function() {
             if (hoverNode && (selectedMode === "editing")) {
-                hoverNode.name = $('#itemName').val();
-                hoverNode.size = parseInt($('#itemSize').val());
-                hoverNode.comment = $('#itemComment').val();
-                hoverNode.category = $('#itemCategory').val();
+                var nlf0 = nlform.fields[0];
+                var nlf1 = nlform.fields[1];
+                var nlf2 = nlform.fields[2];
+                hoverNode.name = nlf2.getinput.value;
+                hoverNode.size = nlf0.getinput.value;
+                hoverNode.category = nlf1.getinput.value;
                 $('.main').hide();
                 $('.d3').show();
             }
