@@ -413,7 +413,8 @@ function initD3Tree(nlform, data) {
                 addNewNodeAt(d);
             }
             if (!ev.shiftKey && !ev.ctrlKey) {
-                d = toggleChildren(d);    
+                $("#desc").toggle();
+                return;
             }
             update(d);
             if (!ev.shiftKey && !ev.ctrlKey) {
@@ -473,7 +474,7 @@ function initD3Tree(nlform, data) {
                 },
                 items: {
                     "sep1": "---------",
-                    "collapse": {name: "Collapse", icon: "edit"},
+                    "collapse": {name: "Collapse", icon: "cut"},
                     "edit": {name: "Edit", icon: "edit"},
                     "cut": {name: "Cut", icon: "cut"},
                     "copy": {name: "Copy", icon: "copy"},
@@ -599,6 +600,7 @@ function initD3Tree(nlform, data) {
                 })
                 .on("mouseover", function(d) {
                     hoverNode = d;
+                    $("#desc-text").text(d.desc);
                 });
 
             nodeEnter.append("text")
