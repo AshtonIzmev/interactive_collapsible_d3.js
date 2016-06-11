@@ -402,36 +402,40 @@ function initD3Tree(data) {
         // Toggle children on click.
 
         function rightClickNode(d) {
-            if (d3.event.defaultPrevented) return; // click suppressed
-            if (d3.event.shiftKey && !d3.event.ctrlKey) {
-                editNode(d);
-            }
-            if (d3.event.ctrlKey && !d3.event.shiftKey) {
-                addNewNodeAt(d);
-            }
-            if (d3.event.shiftKey && d3.event.ctrlKey) {
+            var ev = d3.event;
+            if (ev.defaultPrevented) return; // click suppressed
+            if (ev.shiftKey && ev.ctrlKey) {
                 deleteNode(d);
             }
-            if (!d3.event.shiftKey && !d3.event.ctrlKey) {
+            if (ev.shiftKey && !ev.ctrlKey) {
+                editNode(d);
+            }
+            if (ev.ctrlKey && !ev.shiftKey) {
+                addNewNodeAt(d);
+            }
+            if (!ev.shiftKey && !ev.ctrlKey) {
                 d = toggleChildren(d);    
             }
             update(d);
-            if (!d3.event.shiftKey && !d3.event.ctrlKey) {
+            if (!ev.shiftKey && !ev.ctrlKey) {
                 centerNode(d); 
             }
         }
 
         function fillEditForm(d) {
             // horrible nl form hack
-            var nlf0 = nlform.fields[0];
             var nlf1 = nlform.fields[1];
+            var nlf0 = nlform.fields[0];
             var nlf2 = nlform.fields[2];
-            nlf0.getinput.value = d.size;
-            nlf1.getinput.value = d.category;
+            var nlf3 = nlform.fields[3];
+            nlf1.getinput.value = d.size;
+            nlf0.getinput.value = d.category;
             nlf2.getinput.value = d.name;
-            nlf0.toggle.innerHTML = d.size ? d.size : nlf0.getinput.getAttribute('placeholder');
-            nlf1.toggle.innerHTML = d.category.trim() !== '' ? d.category : nlf1.getinput.getAttribute('placeholder');
+            nlf3.getinput.value = d.desc;
+            nlf1.toggle.innerHTML = d.size ? d.size : nlf1.getinput.getAttribute('placeholder');
+            nlf0.toggle.innerHTML = d.category.trim() !== '' ? d.category : nlf0.getinput.getAttribute('placeholder');
             nlf2.toggle.innerHTML = d.name.trim() !== '' ? d.name : nlf2.getinput.getAttribute('placeholder');
+            nlf3.toggle.innerHTML = d.name.trim() !== '' ? d.desc : nlf3.getinput.getAttribute('placeholder');
         }
 
         function editNode(d) {
@@ -481,12 +485,14 @@ function initD3Tree(data) {
 
         $('#submitBtn').on('click', function() {
             if (hoverNode && (selectedMode === "editing")) {
-                var nlf0 = nlform.fields[0];
                 var nlf1 = nlform.fields[1];
+                var nlf0 = nlform.fields[0];
                 var nlf2 = nlform.fields[2];
+                var nlf3 = nlform.fields[3];
                 hoverNode.name = nlf2.getinput.value;
-                hoverNode.size = nlf0.getinput.value;
-                hoverNode.category = nlf1.getinput.value;
+                hoverNode.size = nlf1.getinput.value;
+                hoverNode.category = nlf0.getinput.value;
+                hoverNode.desc = nlf3.getinput.value;
                 $('.main').hide();
                 $('.d3').show();
             }
@@ -610,7 +616,7 @@ function initD3Tree(data) {
                 .attr('class', 'ghostCircle')
                 .attr("r", 30)
                 .attr("opacity", 0.2) // change this to zero to hide the target area
-            .style("fill", "red")
+                .style("fill", "red")
                 .attr('pointer-events', 'mouseover')
                 .on("mouseover", function(node) {
                     overCircle(node);
@@ -725,7 +731,7 @@ function initD3Tree(data) {
 }
 
 $( document ).ready(function() {
-    $('.main').hide();  
+    $('.main').hide();
     initD3Tree();
     $('#ulBtn').on('click', function() {
         input = $('#fileInput');

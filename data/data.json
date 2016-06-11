@@ -2,34 +2,42 @@
     "name": "flare",
     "category": "informatique",
     "size": 4,
+    "desc": "description",
     "children": [{
         "name": "analytics",
         "category": "informatique",
         "size": 4,
+        "desc": "Analyse",
         "children": [{
             "name": "cluster",
             "category": "informatique",
             "size": 3,
+            "desc": "Vide",
             "children": [{
                 "name": "AgglomerativeCluster",
                 "size": 8,
+                "desc": "Agglomeration",
                 "category": "informatique"
             }, {
                 "name": "CommunityStructure",
                 "size": 4,
+                "desc": "I a community",
                 "category": "informatique"
             }, {
                 "name": "HierarchicalCluster",
                 "size": 3,
+                "desc": "",
                 "category": "informatique"
             }, {
                 "name": "MergeEdge",
                 "size": 2,
+                "desc": "I am a merge edge",
                 "category": "informatique"
             }]
         }, {
             "name": "Visualization",
             "size": 3,
+            "desc": "I am a visualisation",
             "category": "informatique"
         }]
     }]
