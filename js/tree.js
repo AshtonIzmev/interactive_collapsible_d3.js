@@ -462,6 +462,10 @@ function initD3Tree(nlform, data) {
                     if (copiedNode && (key === "paste")) {
                         pasteNodeAt(hoverNode, copiedNode);
                     }
+                    if (key === "collapse") {
+                        d = toggleChildren(hoverNode);   
+                        update(hoverNode);
+                    }
                     if (key === "delete") {
                         deleteNode(hoverNode);
                         update(hoverNode);
@@ -469,6 +473,7 @@ function initD3Tree(nlform, data) {
                 },
                 items: {
                     "sep1": "---------",
+                    "collapse": {name: "Collapse", icon: "edit"},
                     "edit": {name: "Edit", icon: "edit"},
                     "cut": {name: "Cut", icon: "cut"},
                     "copy": {name: "Copy", icon: "copy"},
