@@ -28,15 +28,14 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 // Thank you Rob for your great work (@AshtonIzmev)
 
 
-function initD3Tree(data) {
+function initD3Tree(nlform, data) {
     // Get JSON data
     treeJSON = d3.json("data/data.json", function(error, treeData) {
 
         if (data) {
             treeData = data;
         }
-        
-        var nlform = new NLForm( document.getElementById( 'nl-form' ) );
+
         // Calculate total nodes, max label length
         var totalNodes = 0;
         var maxLabelLength = 0;
@@ -377,7 +376,7 @@ function initD3Tree(data) {
         function addNewNodeAt(d) {
             var newChild = {'parent': d, 
                 'name': 'name', 'size': 3,
-                'comment': 'comment',
+                'desc': 'description',
                 'category': 'category'};
             if (d.children) {
                 d.children.push(newChild);    
@@ -389,7 +388,7 @@ function initD3Tree(data) {
         function pasteNodeAt(d, cop) {
             var newChild = {'parent': d, 
                 'name': cop.name, 'size': cop.size,
-                'comment': cop.comment,
+                'desc': cop.desc,
                 'category': cop.category};
             if (d.children) {
                 d.children.push(newChild);    
@@ -428,14 +427,14 @@ function initD3Tree(data) {
             var nlf0 = nlform.fields[0];
             var nlf2 = nlform.fields[2];
             var nlf3 = nlform.fields[3];
-            nlf1.getinput.value = d.size;
             nlf0.getinput.value = d.category;
+            nlf1.getinput.value = d.size;
             nlf2.getinput.value = d.name;
             nlf3.getinput.value = d.desc;
-            nlf1.toggle.innerHTML = d.size ? d.size : nlf1.getinput.getAttribute('placeholder');
             nlf0.toggle.innerHTML = d.category.trim() !== '' ? d.category : nlf0.getinput.getAttribute('placeholder');
+            nlf1.toggle.innerHTML = d.size ? d.size : nlf1.getinput.getAttribute('placeholder');
             nlf2.toggle.innerHTML = d.name.trim() !== '' ? d.name : nlf2.getinput.getAttribute('placeholder');
-            nlf3.toggle.innerHTML = d.name.trim() !== '' ? d.desc : nlf3.getinput.getAttribute('placeholder');
+            nlf3.toggle.innerHTML = d.desc.trim() !== '' ? d.desc : nlf3.getinput.getAttribute('placeholder');
         }
 
         function editNode(d) {
@@ -509,7 +508,7 @@ function initD3Tree(data) {
         });
 
         function stringify(node) {
-            var a = '{"name": "'+node.name+'", "category": "'+node.category+'"';
+            var a = '{"name": "'+node.name+'", "category": "'+node.category+'", "desc": "'+node.desc+'", "size": '+node.size;
             if (node.children) {
                 a += ', "children": [';
                 var i =0;
@@ -731,8 +730,9 @@ function initD3Tree(data) {
 }
 
 $( document ).ready(function() {
+    var nlform = new NLForm( document.getElementById( 'nl-form' ) );
     $('.main').hide();
-    initD3Tree();
+    initD3Tree(nlform);
     $('#ulBtn').on('click', function() {
         input = $('#fileInput');
         if (!input) {
@@ -749,7 +749,7 @@ $( document ).ready(function() {
           fr = new FileReader();
           fr.onload = function(e) {  
             bfile = e.target.result
-            initD3Tree(JSON.parse(bfile));
+            initD3Tree(nlform, JSON.parse(bfile));
           }
           fr.readAsText(file);
         }
